@@ -15,6 +15,27 @@ pipeline {
             }
         }
 
+        stage('Verify SonarQube Token') {
+    steps {
+        script {
+            withCredentials([
+                string(credentialsId: 'jenkins-token', variable: 'SONAR_TOKEN')
+            ]) {
+                withSonarQubeEnv('sonarqube') {
+                    sh '''
+                        STATUS=$(curl -s -o /tmp/sonar-auth.json -w "%{http_code}" \
+                          -u "$SONAR_TOKEN:" \
+                          "$SONAR_HOST_URL/api/authentication/validate")
+
+                        echo "SonarQube authentication HTTP status: $STATUS"
+
+                        cat /tmp/sonar-auth.json
+                    '''
+                }
+            }
+        }
+    }
+}
         stage('SonarQube Analysis') {
             steps {
                 script {
