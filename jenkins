@@ -1,0 +1,6 @@
+sonarqube-jenkins-demo/
+│
+├── Jenkinsfile
+├── sonar-project.properties
+├── app.js
+└── README.md
